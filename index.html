@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Genética y Herencia — Guía de estudio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #EEF2EF;
+    --surface: #FFFFFF;
+    --surface-soft: #E4EBE6;
+    --text: #1B2624;
+    --text-soft: #52625E;
+    --line: #D3DBD5;
+    --primary: #2B6E55;
+    --primary-soft: #DCEAE3;
+    --primary-strong: #163F30;
+    --amber: #B8863A;
+    --amber-soft: #F3E6CE;
+    --wrong: #A8453B;
+    --wrong-soft: #F5DEDB;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101915;
+      --surface: #17221D;
+      --surface-soft: #1E2B24;
+      --text: #E7EEE9;
+      --text-soft: #9FB1A9;
+      --line: #2B3A33;
+      --primary: #6FBF9B;
+      --primary-soft: #1E3A2E;
+      --primary-strong: #B6E6CC;
+      --amber: #D9AE68;
+      --amber-soft: #3A2E18;
+      --wrong: #E08579;
+      --wrong-soft: #3A211E;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #101915;
+    --surface: #17221D;
+    --surface-soft: #1E2B24;
+    --text: #E7EEE9;
+    --text-soft: #9FB1A9;
+    --line: #2B3A33;
+    --primary: #6FBF9B;
+    --primary-soft: #1E3A2E;
+    --primary-strong: #B6E6CC;
+    --amber: #D9AE68;
+    --amber-soft: #3A2E18;
+    --wrong: #E08579;
+    --wrong-soft: #3A211E;
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; font-weight: 600; margin: 0; }
+
+  .app { max-width: 640px; margin: 0 auto; padding: 0 16px 40px; }
+
+  header.top {
+    position: sticky;
+    top: 0;
+    top: env(safe-area-inset-top, 0px);
+    background: var(--bg);
+    z-index: 10;
+    padding: 18px 0 10px;
+    border-bottom: 1px solid var(--line);
+  }
+  header.top .eyebrow {
+    color: var(--primary);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  header.top h1 { font-size: 22px; line-height: 1.25; margin-top: 2px; color: var(--text); }
+  header.top p.sub { color: var(--text-soft); font-size: 13.5px; margin: 4px 0 0; }
+
+  nav.tabs {
+    display: flex;
+    gap: 6px;
+    margin-top: 14px;
+    background: var(--surface-soft);
+    border-radius: 12px;
+    padding: 4px;
+  }
+  nav.tabs button {
+    flex: 1;
+    border: none;
+    background: transparent;
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 13.5px;
+    font-weight: 600;
+    padding: 9px 4px;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background .15s ease, color .15s ease;
+  }
+  nav.tabs button.active {
+    background: var(--surface);
+    color: var(--primary-strong);
+    box-shadow: 0 1px 2px rgba(0,0,0,.08);
+  }
+
+  section.view { display: none; padding-top: 18px; }
+  section.view.active { display: block; }
+
+  /* Resumen */
+  details.topic {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  details.topic summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 600;
+    font-size: 15px;
+  }
+  details.topic summary::-webkit-details-marker { display: none; }
+  details.topic summary .num {
+    color: var(--primary);
+    font-family: 'Fraunces', serif;
+    font-size: 15px;
+    min-width: 20px;
+  }
+  details.topic summary::after {
+    content: '+';
+    margin-left: auto;
+    color: var(--text-soft);
+    font-size: 18px;
+    font-weight: 400;
+  }
+  details.topic[open] summary::after { content: '–'; }
+  details.topic .body {
+    padding: 0 16px 16px 46px;
+    color: var(--text-soft);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  details.topic .body ul { margin: 6px 0; padding-left: 18px; }
+  details.topic .body li { margin-bottom: 4px; }
+  details.topic .body strong { color: var(--text); }
+
+  /* Flashcards */
+  .card-wrap { padding-top: 4px; }
+  .progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-soft);
+    font-size: 13px;
+    margin-bottom: 10px;
+  }
+  .flashcard {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 28px 20px;
+    cursor: pointer;
+    position: relative;
+  }
+  .flashcard .tag {
+    position: absolute;
+    top: 14px;
+    left: 16px;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--primary);
+    font-weight: 700;
+  }
+  .flashcard .term {
+    font-family: 'Fraunces', serif;
+    font-size: 22px;
+    color: var(--text);
+  }
+  .flashcard .def {
+    font-size: 15.5px;
+    color: var(--text-soft);
+    line-height: 1.5;
+  }
+  .flashcard .hint {
+    position: absolute;
+    bottom: 12px;
+    font-size: 11.5px;
+    color: var(--text-soft);
+    opacity: .7;
+  }
+  .card-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+  .card-controls button {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .card-controls button.primary {
+    background: var(--primary);
+    border-color: var(--primary);
+    color: #fff;
+  }
+
+  /* Quiz */
+  .quiz-progress { color: var(--text-soft); font-size: 13px; margin-bottom: 10px; }
+  .quiz-q {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px;
+  }
+  .quiz-q h3 { font-size: 16.5px; line-height: 1.4; margin-bottom: 14px; }
+  .opt {
+    display: block;
+    width: 100%;
+    text-align: left;
+    background: var(--surface-soft);
+    border: 1px solid var(--line);
+    border-radius: 11px;
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    font-family: inherit;
+    font-size: 14.5px;
+    color: var(--text);
+    cursor: pointer;
+  }
+  .opt.correct { background: var(--primary-soft); border-color: var(--primary); color: var(--primary-strong); font-weight: 600; }
+  .opt.wrong { background: var(--wrong-soft); border-color: var(--wrong); color: var(--wrong); font-weight: 600; }
+  .opt[disabled] { cursor: default; }
+  .explain {
+    margin-top: 10px;
+    padding: 12px 14px;
+    background: var(--amber-soft);
+    border-radius: 11px;
+    font-size: 13.5px;
+    color: var(--text);
+    line-height: 1.5;
+    display: none;
+  }
+  .explain.show { display: block; }
+  .quiz-next {
+    margin-top: 14px;
+    width: 100%;
+    padding: 13px;
+    border-radius: 12px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14.5px;
+    cursor: pointer;
+    display: none;
+  }
+  .quiz-next.show { display: block; }
+  .quiz-result {
+    text-align: center;
+    padding: 30px 16px;
+  }
+  .quiz-result .score {
+    font-family: 'Fraunces', serif;
+    font-size: 42px;
+    color: var(--primary);
+    margin: 10px 0;
+  }
+  .quiz-result p { color: var(--text-soft); font-size: 14.5px; }
+  .quiz-result button {
+    margin-top: 14px;
+    padding: 12px 22px;
+    border-radius: 12px;
+    border: none;
+    background: var(--primary);
+    color: #fff;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 14.5px;
+    cursor: pointer;
+  }
+
+  footer.note {
+    text-align: center;
+    color: var(--text-soft);
+    font-size: 12.5px;
+    margin-top: 26px;
+    line-height: 1.6;
+  }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="eyebrow">Semana 3 · Embriología y Genética</div>
+    <h1>Genética y herencia</h1>
+    <p class="sub">Vocabulario, leyes de Mendel, Punnett, ABO/Rh, hemofilia y señalización celular</p>
+    <nav class="tabs">
+      <button class="tab-btn active" data-view="resumen">Resumen</button>
+      <button class="tab-btn" data-view="cards">Tarjetas</button>
+      <button class="tab-btn" data-view="quiz">Quiz</button>
+    </nav>
+  </header>
+
+  <section class="view active" id="view-resumen">
+    <div id="topics"></div>
+  </section>
+
+  <section class="view" id="view-cards">
+    <div class="card-wrap">
+      <div class="progress-row">
+        <span id="card-count">Tarjeta 1 / 22</span>
+        <span id="card-cat">Vocabulario</span>
+      </div>
+      <div class="flashcard" id="flashcard">
+        <span class="tag" id="card-side-tag">TÉRMINO</span>
+        <div class="term" id="card-front"></div>
+        <div class="def" id="card-back" style="display:none;"></div>
+        <span class="hint">toca para voltear</span>
+      </div>
+      <div class="card-controls">
+        <button id="card-prev">← Anterior</button>
+        <button id="card-next" class="primary">Siguiente →</button>
+      </div>
+    </div>
+  </section>
+
+  <section class="view" id="view-quiz">
+    <div id="quiz-area"></div>
+  </section>
+
+  <footer class="note">Repasa las veces que quieras — nada se envía ni se guarda fuera de este dispositivo.</footer>
+</div>
+
+<script>
+// ---------- DATA ----------
+const topics = [
+  { title: "Vocabulario básico de genética", body: `
+    <ul>
+      <li><strong>ADN:</strong> molécula que almacena la información genética.</li>
+      <li><strong>Gen:</strong> segmento de ADN con función específica.</li>
+      <li><strong>Alelo:</strong> variante de un gen.</li>
+      <li><strong>Cromosoma:</strong> estructura que contiene los genes.</li>
+      <li><strong>Locus:</strong> ubicación de un gen en el cromosoma.</li>
+      <li><strong>Genotipo:</strong> combinación de alelos.</li>
+      <li><strong>Fenotipo:</strong> características observables.</li>
+      <li><strong>Homocigoto:</strong> dos alelos iguales. <strong>Heterocigoto:</strong> dos alelos diferentes.</li>
+      <li><strong>Mutación:</strong> cambio en la secuencia del ADN.</li>
+    </ul>` },
+  { title: "Leyes de Mendel", body: `
+    <ul>
+      <li><strong>1ª — Uniformidad/dominancia:</strong> al cruzar dos homocigotos que difieren en un carácter, la F1 es uniforme. Ej: AA × aa → 100% Aa (fenotipo dominante).</li>
+      <li><strong>2ª — Segregación:</strong> los alelos se separan durante la formación de gametos. Ej: Aa × Aa → genotipos 1AA : 2Aa : 1aa; fenotipos 3 dominante : 1 recesivo.</li>
+      <li><strong>3ª — Distribución independiente:</strong> los alelos de genes diferentes se heredan independientemente (si no hay ligamiento). Ej: AaBb → gametos AB, Ab, aB, ab en proporción 1:1:1:1.</li>
+    </ul>` },
+  { title: "Ejercicios de Punnett", body: `
+    <ul>
+      <li><strong>a) Ratones bb (blanco, recesivo) × Bb (negro):</strong> 50% Bb (negro), 50% bb (blanco).</li>
+      <li><strong>b) AaBb × aabb:</strong> gametos AaBb → AB, Ab, aB, ab; aabb → ab. Resultado: 4 genotipos distintos (AaBb, Aabb, aaBb, aabb), 25% cada uno.</li>
+      <li><strong>c) Geranios (dominancia incompleta) C<sup>R</sup>C<sup>B</sup> × C<sup>R</sup>C<sup>B</sup>:</strong> 25% rojas, 50% rosadas, 25% blancas.</li>
+      <li><strong>d) Daltonismo (ligado al X):</strong> madre portadora X<sup>D</sup>X<sup>d</sup> × padre normal X<sup>D</sup>Y → hijos varones: 50% daltónicos; hijas: 0% afectadas, 50% portadoras.</li>
+    </ul>` },
+  { title: "Sistema ABO y factor Rh", body: `
+    <ul>
+      <li><strong>Grupo A:</strong> genotipo I<sup>A</sup>I<sup>A</sup> o I<sup>A</sup>i — anticuerpo anti-B.</li>
+      <li><strong>Grupo B:</strong> genotipo I<sup>B</sup>I<sup>B</sup> o I<sup>B</sup>i — anticuerpo anti-A.</li>
+      <li><strong>Grupo AB:</strong> genotipo I<sup>A</sup>I<sup>B</sup> — sin anticuerpos (receptor universal).</li>
+      <li><strong>Grupo O:</strong> genotipo ii — anticuerpos anti-A y anti-B (donante universal de glóbulos).</li>
+      <li><strong>Rh+:</strong> DD o Dd (presenta antígeno D). <strong>Rh-:</strong> dd (puede sensibilizarse tras exposición, importante en embarazo).</li>
+    </ul>` },
+  { title: "Caso: hombre B + mujer AB", body: `
+    <p>Padre grupo B (I<sup>B</sup>I<sup>B</sup> o I<sup>B</sup>i), madre grupo AB (I<sup>A</sup>I<sup>B</sup>). Para un hijo de grupo O se necesita genotipo <strong>ii</strong>, y la madre AB no tiene el alelo i.</p>
+    <p><strong>Conclusión:</strong> no es posible que esta pareja tenga un hijo de grupo O. Si el padre es heterocigoto (I<sup>B</sup>i), los hijos posibles son AB, B o A — nunca O.</p>` },
+  { title: "Determinación de paternidad (ABO)", body: `
+    <p>El sistema ABO solo permite <strong>excluir</strong> a un posible padre, nunca confirmar la paternidad con certeza (para eso se necesita prueba de ADN).</p>
+    <p>Ej: madre A (I<sup>A</sup>i), hijo O (ii) → el padre debe tener un alelo i. Un candidato AB (I<sup>A</sup>I<sup>B</sup>) queda excluido porque no tiene alelo i; un candidato B (I<sup>B</sup>i) sí es compatible.</p>` },
+  { title: "Hemofilia A (herencia ligada al X)", body: `
+    <p>El gen de la hemofilia está en el cromosoma X y es recesivo. Los hombres (XY) se afectan con un solo alelo recesivo (X<sup>h</sup>Y); las mujeres (XX) necesitan dos (X<sup>h</sup>X<sup>h</sup>) para estar afectadas — con uno solo son portadoras (X<sup>H</sup>X<sup>h</sup>).</p>
+    <p>Ej: padre hemofílico × madre portadora → hijas: 50% portadoras, 50% sanas; hijos varones: 50% hemofílicos, 50% sanos.</p>` },
+  { title: "Señalización celular", body: `
+    <ul>
+      <li><strong>Yuxtacrina:</strong> requiere contacto físico directo entre células. Ej: Delta–Notch.</li>
+      <li><strong>Autocrina:</strong> la célula emisora actúa sobre sí misma. Ej: factores de crecimiento en células inmunitarias.</li>
+      <li><strong>Paracrina:</strong> actúa sobre células vecinas cercanas, sin pasar a la circulación general. Ej: FGF, Shh en el desarrollo embrionario.</li>
+    </ul>` },
+];
+
+const flashcards = [
+  ["ADN", "Molécula que almacena la información genética.", "Vocabulario"],
+  ["Gen", "Segmento de ADN con una función específica.", "Vocabulario"],
+  ["Alelo", "Variante de un gen.", "Vocabulario"],
+  ["Cromosoma", "Estructura que contiene los genes.", "Vocabulario"],
+  ["Locus", "Ubicación de un gen en el cromosoma.", "Vocabulario"],
+  ["Genotipo", "Combinación de alelos que posee un individuo.", "Vocabulario"],
+  ["Fenotipo", "Características observables de un individuo.", "Vocabulario"],
+  ["Homocigoto / Heterocigoto", "Dos alelos iguales / dos alelos diferentes para un gen.", "Vocabulario"],
+  ["Mutación", "Cambio en la secuencia del ADN.", "Vocabulario"],
+  ["1ª ley de Mendel", "Uniformidad: al cruzar dos homocigotos que difieren en un carácter, la F1 es uniforme. AA × aa → 100% Aa.", "Mendel"],
+  ["2ª ley de Mendel", "Segregación: los alelos se separan al formarse los gametos. Aa × Aa → 1:2:1 genotipos, 3:1 fenotipos.", "Mendel"],
+  ["3ª ley de Mendel", "Distribución independiente: los alelos de genes distintos se heredan independientemente (sin ligamiento).", "Mendel"],
+  ["Dominancia incompleta", "El heterocigoto muestra un fenotipo intermedio. Ej: C^R C^B (rojo×blanco) → rosado.", "Punnett"],
+  ["Grupo sanguíneo A", "Genotipo I^A I^A o I^A i · antígeno A · anticuerpo anti-B.", "ABO/Rh"],
+  ["Grupo sanguíneo B", "Genotipo I^B I^B o I^B i · antígeno B · anticuerpo anti-A.", "ABO/Rh"],
+  ["Grupo sanguíneo AB", "Genotipo I^A I^B · ambos antígenos · sin anticuerpos.", "ABO/Rh"],
+  ["Grupo sanguíneo O", "Genotipo ii · sin antígenos · anticuerpos anti-A y anti-B.", "ABO/Rh"],
+  ["Factor Rh", "Rh+ = DD o Dd (antígeno D presente). Rh- = dd (puede sensibilizarse tras exposición).", "ABO/Rh"],
+  ["Herencia ligada al X", "El gen está en el cromosoma X. Los varones (XY) se afectan con un solo alelo recesivo; las mujeres (XX) necesitan dos.", "Hemofilia"],
+  ["Portadora", "Mujer heterocigota (ej. X^H X^h) que no manifiesta la enfermedad pero puede transmitirla.", "Hemofilia"],
+  ["Señalización yuxtacrina", "Requiere contacto físico directo entre la célula emisora y la receptora. Ej: Delta–Notch.", "Señalización"],
+  ["Señalización autocrina", "La célula actúa sobre sí misma. Ej: factores de crecimiento en el sistema inmune.", "Señalización"],
+  ["Señalización paracrina", "Actúa sobre células vecinas cercanas. Ej: FGF, Shh en el desarrollo embrionario.", "Señalización"],
+];
+
+const quiz = [
+  { q: "¿Qué plantea la 1ª ley de Mendel (uniformidad)?", opts: ["Los alelos se separan en los gametos", "Al cruzar dos homocigotos que difieren en un carácter, la F1 es uniforme", "Los genes se heredan siempre ligados"], correct: 1,
+    ex: "Ejemplo: AA × aa → toda la F1 es Aa (fenotipo dominante)." },
+  { q: "Cruce Aa × Aa con dominancia completa: ¿qué proporción fenotípica se espera?", opts: ["1:2:1", "3:1", "1:1"], correct: 1,
+    ex: "Genotipos 1AA:2Aa:1aa dan fenotipos 3 dominante : 1 recesivo." },
+  { q: "Ratón blanco (bb) × ratón negro heterocigoto (Bb): ¿qué % de crías serán blancas?", opts: ["25%", "50%", "100%"], correct: 1,
+    ex: "bb × Bb → 50% Bb (negro), 50% bb (blanco)." },
+  { q: "En el cruce AaBb × aabb, ¿cuántos genotipos distintos se obtienen?", opts: ["2", "4", "9"], correct: 1,
+    ex: "AaBb, Aabb, aaBb, aabb — 25% cada uno." },
+  { q: "Geranios C^R C^B × C^R C^B (dominancia incompleta): ¿qué % serán rosadas?", opts: ["25%", "50%", "75%"], correct: 1,
+    ex: "25% rojas (C^RC^R), 50% rosadas (C^RC^B), 25% blancas (C^BC^B)." },
+  { q: "Madre portadora de daltonismo (X^D X^d) × padre normal (X^D Y): ¿qué % de los hijos varones serán daltónicos?", opts: ["0%", "25%", "50%"], correct: 2,
+    ex: "Los varones reciben X de la madre: 50% X^D (normal), 50% X^d (daltónico)." },
+  { q: "¿Cuál es el genotipo de una persona con grupo sanguíneo O?", opts: ["I^A i", "ii", "I^A I^B"], correct: 1,
+    ex: "El grupo O es siempre homocigoto recesivo: ii." },
+  { q: "Hombre grupo B (I^B i) y mujer grupo AB (I^A I^B): ¿pueden tener un hijo de grupo O?", opts: ["Sí", "No", "Solo si es niña"], correct: 1,
+    ex: "La madre AB no tiene el alelo i, así que ningún hijo puede ser ii (grupo O)." },
+  { q: "En el sistema Rh, ¿qué genotipo corresponde a Rh negativo?", opts: ["DD", "Dd", "dd"], correct: 2,
+    ex: "Rh- es homocigoto recesivo (dd); DD y Dd son Rh+." },
+  { q: "¿Qué tipo de señalización requiere contacto físico directo entre células (ej. Delta–Notch)?", opts: ["Paracrina", "Autocrina", "Yuxtacrina"], correct: 2,
+    ex: "Yuxtacrina: el ligando permanece en la membrana de la célula emisora." },
+  { q: "En la señalización autocrina, ¿quién recibe la señal?", opts: ["Una célula vecina", "La misma célula que la emite", "Cualquier célula del cuerpo"], correct: 1,
+    ex: "Autocrina = la célula actúa sobre sí misma." },
+  { q: "Padre hemofílico × madre portadora: ¿qué % de los hijos varones serán hemofílicos?", opts: ["25%", "50%", "100%"], correct: 1,
+    ex: "Los varones reciben el X de la madre portadora: 50% heredan X^h (hemofílico)." },
+];
+
+// ---------- RESUMEN ----------
+const topicsEl = document.getElementById('topics');
+topics.forEach((t, i) => {
+  const d = document.createElement('details');
+  d.className = 'topic';
+  if (i === 0) d.open = true;
+  d.innerHTML = `<summary><span class="num">${i+1}</span>${t.title}</summary><div class="body">${t.body}</div>`;
+  topicsEl.appendChild(d);
+});
+
+// ---------- TABS ----------
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('view-' + btn.dataset.view).classList.add('active');
+  });
+});
+
+// ---------- FLASHCARDS ----------
+let cardIdx = 0;
+let flipped = false;
+const cardFront = document.getElementById('card-front');
+const cardBack = document.getElementById('card-back');
+const cardCount = document.getElementById('card-count');
+const cardCat = document.getElementById('card-cat');
+const cardSideTag = document.getElementById('card-side-tag');
+const flashcardEl = document.getElementById('flashcard');
+
+function renderCard() {
+  const [term, def, cat] = flashcards[cardIdx];
+  cardFront.textContent = term;
+  cardBack.textContent = def;
+  cardCount.textContent = `Tarjeta ${cardIdx + 1} / ${flashcards.length}`;
+  cardCat.textContent = cat;
+  flipped = false;
+  cardFront.style.display = 'block';
+  cardBack.style.display = 'none';
+  cardSideTag.textContent = 'TÉRMINO';
+}
+flashcardEl.addEventListener('click', () => {
+  flipped = !flipped;
+  cardFront.style.display = flipped ? 'none' : 'block';
+  cardBack.style.display = flipped ? 'block' : 'none';
+  cardSideTag.textContent = flipped ? 'DEFINICIÓN' : 'TÉRMINO';
+});
+document.getElementById('card-next').addEventListener('click', () => {
+  cardIdx = (cardIdx + 1) % flashcards.length;
+  renderCard();
+});
+document.getElementById('card-prev').addEventListener('click', () => {
+  cardIdx = (cardIdx - 1 + flashcards.length) % flashcards.length;
+  renderCard();
+});
+renderCard();
+
+// ---------- QUIZ ----------
+let qIdx = 0;
+let score = 0;
+const quizArea = document.getElementById('quiz-area');
+
+function renderQuiz() {
+  if (qIdx >= quiz.length) {
+    quizArea.innerHTML = `
+      <div class="quiz-result">
+        <div style="color:var(--text-soft);font-size:14px;">Puntaje final</div>
+        <div class="score">${score} / ${quiz.length}</div>
+        <p>${score === quiz.length ? '¡Perfecto! Ya te sabes esto de memoria.' : score >= quiz.length * 0.7 ? 'Muy bien, solo repasa lo que fallaste.' : 'Vale la pena repasar las tarjetas otra vez.'}</p>
+        <button id="quiz-restart">Reintentar</button>
+      </div>`;
+    document.getElementById('quiz-restart').addEventListener('click', () => {
+      qIdx = 0; score = 0; renderQuiz();
+    });
+    return;
+  }
+  const item = quiz[qIdx];
+  quizArea.innerHTML = `
+    <div class="quiz-progress">Pregunta ${qIdx + 1} / ${quiz.length} · Aciertos: ${score}</div>
+    <div class="quiz-q">
+      <h3>${item.q}</h3>
+      <div id="opts"></div>
+      <div class="explain" id="explain">${item.ex}</div>
+      <button class="quiz-next" id="quiz-next">Siguiente</button>
+    </div>`;
+  const optsEl = document.getElementById('opts');
+  item.opts.forEach((opt, i) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.textContent = opt;
+    b.addEventListener('click', () => {
+      document.querySelectorAll('.opt').forEach(o => o.disabled = true);
+      if (i === item.correct) {
+        b.classList.add('correct');
+        score++;
+      } else {
+        b.classList.add('wrong');
+        optsEl.children[item.correct].classList.add('correct');
+      }
+      document.getElementById('explain').classList.add('show');
+      document.getElementById('quiz-next').classList.add('show');
+    });
+    optsEl.appendChild(b);
+  });
+}
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'quiz-next') {
+    qIdx++;
+    renderQuiz();
+  }
+});
+renderQuiz();
+</script>
+</body>
+</html>
