@@ -34,9 +34,16 @@
     --amber: #D9AE68; --amber-soft: #3A2E18;
     --wrong: #E08579; --wrong-soft: #3A211E;
   }
+  @media (min-width: 768px) {
+    .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .second-card { display: flex; }
+  }
   @media (min-width: 860px) {
     .app { max-width: 880px; }
     details.topic .body { font-size: calc(var(--fs-body) + 1px); }
+  }
+  @media (min-width: 1200px) {
+    .quiz-q #opts { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   }
   * { box-sizing: border-box; }
   html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text);
@@ -45,15 +52,25 @@
   html { scroll-padding-top: env(safe-area-inset-top, 0px); }
   h1, h2, h3 { font-family: 'Manrope', system-ui, sans-serif; font-weight: 700; margin: 0; }
   .app { max-width: 680px; margin: 0 auto; padding: 0 16px 40px; }
-  header.top { position: sticky; top: 0; top: env(safe-area-inset-top, 0px); background: var(--bg);
+  header.top { position: sticky; top: 0; top: env(safe-area-inset-top, 0px);
+    background: color-mix(in srgb, var(--bg) 70%, transparent);
+    backdrop-filter: blur(20px) saturate(180%); -webkit-backdrop-filter: blur(20px) saturate(180%);
     z-index: 10; padding: 18px 0 10px; border-bottom: 1px solid var(--line); }
   header.top .eyebrow { color: var(--primary); font-size: 13px; font-weight: 600; letter-spacing: .02em; }
-  header.top h1 { font-size: 21px; line-height: 1.25; margin-top: 2px; color: var(--text); }
+  header.top h1 { font-size: 21px; line-height: 1.25; margin-top: 2px; color: var(--text); letter-spacing: -0.01em; }
   header.top p.sub { color: var(--text-soft); font-size: 13px; margin: 4px 0 0; }
   nav.tabs { display: flex; gap: 6px; margin-top: 14px; background: var(--surface-soft); border-radius: 12px; padding: 4px; }
   nav.tabs button { flex: 1; border: none; background: transparent; color: var(--text-soft); font-family: inherit;
     font-size: 13.5px; font-weight: 600; padding: 9px 4px; border-radius: 9px; cursor: pointer; transition: background .15s ease, color .15s ease; }
   nav.tabs button.active { background: var(--surface); color: var(--primary-strong); box-shadow: 0 1px 2px rgba(0,0,0,.08); }
+  nav.tabs button:active, details.topic summary:active, .opt:active:not([disabled]),
+  .card-controls button:active, .quiz-next:active, .quiz-start button:active, .quiz-result button:active,
+  .flashcard:active { transform: scale(0.97); }
+  nav.tabs button, .opt, .card-controls button, .quiz-next, .quiz-start button, .quiz-result button, .flashcard {
+    transition: transform .1s ease-out, background .1s ease-out; }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
+  }
   section.view { display: none; padding-top: 18px; } section.view.active { display: block; }
 
   details.topic { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
@@ -74,6 +91,8 @@
     font-size:13px; font-weight:600; padding:8px 12px; border-radius:10px; }
 
   .card-wrap { padding-top: 4px; }
+  .cards-grid { display: block; }
+  .second-card { display: none; }
   .progress-row { display: flex; justify-content: space-between; align-items: center; color: var(--text-soft); font-size: 12.5px; margin-bottom: 10px; }
   .flashcard { background: var(--surface); border: 1px solid var(--line); border-radius: 18px; min-height: 220px;
     display: flex; align-items: center; justify-content: center; text-align: center; padding: 26px 18px; cursor: pointer; position: relative; }
@@ -137,12 +156,21 @@
   <section class="view" id="view-cards">
     <div class="card-wrap">
       <div class="progress-row"><span id="card-count"></span><span id="card-cat"></span></div>
-      <div class="flashcard" id="flashcard">
-        <span class="tag" id="card-side-tag">TÉRMINO</span>
-        <span class="cat" id="card-cat-badge"></span>
-        <div class="term" id="card-front"></div>
-        <div class="def" id="card-back" style="display:none;"></div>
-        <span class="hint">toca para voltear</span>
+      <div class="cards-grid">
+        <div class="flashcard" id="flashcard">
+          <span class="tag" id="card-side-tag">TÉRMINO</span>
+          <span class="cat" id="card-cat-badge"></span>
+          <div class="term" id="card-front"></div>
+          <div class="def" id="card-back" style="display:none;"></div>
+          <span class="hint">toca para voltear</span>
+        </div>
+        <div class="flashcard second-card" id="flashcard-2">
+          <span class="tag" id="card-side-tag-2">TÉRMINO</span>
+          <span class="cat" id="card-cat-badge-2"></span>
+          <div class="term" id="card-front-2"></div>
+          <div class="def" id="card-back-2" style="display:none;"></div>
+          <span class="hint">toca para voltear</span>
+        </div>
       </div>
       <div class="card-controls">
         <button id="card-prev">← Anterior</button>
@@ -233,6 +261,12 @@ const cardCat = document.getElementById('card-cat');
 const cardCatBadge = document.getElementById('card-cat-badge');
 const cardSideTag = document.getElementById('card-side-tag');
 const flashcardEl = document.getElementById('flashcard');
+const cardFront2 = document.getElementById('card-front-2');
+const cardBack2 = document.getElementById('card-back-2');
+const cardCatBadge2 = document.getElementById('card-cat-badge-2');
+const cardSideTag2 = document.getElementById('card-side-tag-2');
+const flashcardEl2 = document.getElementById('flashcard-2');
+let flipped2 = false;
 
 function renderCard() {
   const [term, def, cat] = flashcards[cardOrder[cardIdx]];
@@ -245,7 +279,22 @@ function renderCard() {
   cardFront.style.display = 'block';
   cardBack.style.display = 'none';
   cardSideTag.textContent = 'TÉRMINO';
+
+  const idx2 = (cardOrder[(cardIdx + 1) % cardOrder.length]);
+  const [term2, def2, cat2] = flashcards[idx2];
+  cardFront2.textContent = term2;
+  cardBack2.textContent = def2;
+  cardCatBadge2.textContent = cat2;
+  flipped2 = false;
+  cardFront2.style.display = 'block';
+  cardBack2.style.display = 'none';
+  cardSideTag2.textContent = 'TÉRMINO';
 }
+flashcardEl2.addEventListener('click', () => {
+  flipped2 = !flipped2;
+  cardFront2.style.display = flipped2 ? 'none' : 'block';
+  cardBack2.style.display = flipped2 ? 'block' : 'none';
+  cardSideTag2.textContent = flipped2 ? 'DEFINICIÓN' : 'TÉRMINO';
 flashcardEl.addEventListener('click', () => {
   flipped = !flipped;
   cardFront.style.display = flipped ? 'none' : 'block';
