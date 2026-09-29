@@ -34,10 +34,6 @@
     --amber: #D9AE68; --amber-soft: #3A2E18;
     --wrong: #E08579; --wrong-soft: #3A211E;
   }
-  @media (min-width: 768px) {
-    .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-    .second-card { display: flex; }
-  }
   @media (min-width: 860px) {
     .app { max-width: 880px; }
     details.topic .body { font-size: calc(var(--fs-body) + 1px); }
@@ -295,6 +291,7 @@ flashcardEl2.addEventListener('click', () => {
   cardFront2.style.display = flipped2 ? 'none' : 'block';
   cardBack2.style.display = flipped2 ? 'block' : 'none';
   cardSideTag2.textContent = flipped2 ? 'DEFINICIÓN' : 'TÉRMINO';
+});
 flashcardEl.addEventListener('click', () => {
   flipped = !flipped;
   cardFront.style.display = flipped ? 'none' : 'block';
